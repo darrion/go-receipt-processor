@@ -1,4 +1,4 @@
-package models
+package responses
 
 type ReceiptResponse struct {
 	Retailer string `json:"retailer"`
