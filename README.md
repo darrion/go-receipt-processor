@@ -1,3 +1,15 @@
+# Execution Instructions
+## Docker Compose
+To run the app in Docker: 
+```
+docker-compose up --build
+```
+
+To shut down the app in Docker:
+```
+docker-compose down
+```
+
 # Receipt Processor
 
 Build a webservice that fulfils the documented API. The API is described below. A formal definition is provided 
