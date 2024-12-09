@@ -1,10 +1,15 @@
 package models
 
+import (
+	"time"
+	"math/big"
+)
+
 type Receipt struct {
 	Id string 
 	Retailer string
-	PurchaseDate string
-	PurchaseTime string
-	Total string
+	PurchaseDate time.Time
+	PurchaseTime time.Time
+	Total big.Rat
 	Items []Item
 }

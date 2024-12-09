@@ -1,6 +1,10 @@
 package models
 
+import (
+	"math/big"
+)
+
 type Item struct {
 	ShortDescription string
-	Price string
+	Price big.Rat
 }

@@ -1,24 +1,44 @@
 package services
 
 import (
-	"errors"
-	"receipt-processor/models"
-	"receipt-processor/models/response"
+	"receipt-processor/requests"
+	"receipt-processor/responses"
 	"receipt-processor/repositories"
 	"receipt-processor/factories"
-	"github.com/google/uuid"
 )
 
-func SaveReceipt(receipt models.Receipt) (string, error) {
-	id := uuid.New().String()
-	if err := repositories.SaveReceipt(id, receipt); err != nil {
-		return "", err
-	}
-	return id, nil
+func SaveReceipt(receiptRequest requests.ReceiptRequest) string {
+	receipt := factories.RequestToReceipt(receiptRequest)
+	id := repositories.SaveReceipt(receipt)
+	return id
 }
 
-func GetReceiptById(id string) (response.ReceiptResponse, error) {
-	receipt, error := repositories.GetReceiptById(id)
-	receiptResponse := factories.ToReceiptResponse(receipt)
-	return receiptResponse, error
+func GetReceiptById(id string) (responses.ReceiptResponse, error) {
+	receipt, err := repositories.GetReceiptById(id)
+	receiptResponse := factories.ReceiptToResponse(id, receipt)
+	return receiptResponse, err
+}
+
+func GetPoints(id string) (int, error) {
+	receipt, err := repositories.GetReceiptById(id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	pointsForRetailer := GetPointsForRetailer(receipt.Retailer)
+	pointsForTotal := GetPointsForTotal(&receipt.Total)
+	pointsForEveryTwoItems := GetPointsForEveryTwoItems(receipt.Items)
+	pointsForDescriptions := GetPointsForItemDescriptions(receipt.Items)
+	pointsForPurchaseDate := GetPointsForPurchaseDate(receipt.PurchaseDate)
+	pointsForPurchaseTime := GetPointsForPurchaseTime(receipt.PurchaseTime)
+	
+	points := pointsForRetailer
+	points += pointsForTotal
+	points += pointsForEveryTwoItems
+	points += pointsForDescriptions
+	points += pointsForPurchaseDate
+	points += pointsForPurchaseTime
+
+	return points, nil
 }
