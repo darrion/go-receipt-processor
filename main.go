@@ -19,5 +19,5 @@ func registerValidators() {
 func main() {
     registerValidators()
     router := routes.SetupRouter()
-    router.Run(":3000") // Start server on port 8080
+    router.Run(":3000")
 }
