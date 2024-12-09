@@ -7,13 +7,17 @@ import (
     "receipt-processor/routes"
 )
 
-func main() {
-    if validator, ok := binding.Validator.Engine().(*validator.Validate); ok {
+func registerValidators() {
+	if validator, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		validator.RegisterValidation("retailer", validators.ValidateRetailer)
 		validator.RegisterValidation("total", validators.ValidateTotal)
 		validator.RegisterValidation("short_description", validators.ValidateShortDescription)
 		validator.RegisterValidation("price", validators.ValidatePrice)
 	}
+}
+
+func main() {
+    registerValidators()
     router := routes.SetupRouter()
     router.Run(":3000") // Start server on port 8080
 }
